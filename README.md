@@ -2,7 +2,7 @@
 
 **Dr. Bahman Abbassi**
 *Postdoctoral Fellow in Mining Engineering, Université du Québec en Abitibi-Témiscamingue (UQAT)*
-[cite_start]*Email: [bahman.abbassi@uqat.ca](mailto:bahman.abbassi@uqat.ca)* [cite: 2, 463, 469]
+*Email: [bahman.abbassi@uqat.ca](mailto:bahman.abbassi@uqat.ca)* [cite: 2, 463, 469]
 
 ---
 
