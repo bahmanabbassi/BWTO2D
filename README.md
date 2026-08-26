@@ -20,20 +20,6 @@ We present an unsupervised framework for automated extraction and characterizati
 
 **Keywords:** curvilinear pattern recognition · magnetic data · continuous wavelet transform · Bayesian optimization · graph topology
 
-
-## What's new?
-
-Multiscale "worming" (CWT) is the foundation here, but key differences with this pipeline are:
-
-1. Traditional worming often requires manually tweaking scales, thresholds, and derivative orders, etc. BWTO2D eliminates this by using a graph-based Bayesian Optimization for hyperparameter tuning.
-
-2. Past geophysical applications of the Poisson CWT were primarily limited to the spatial domain, which is too computationally demanding for iterative optimization. We implemented the Poisson Derivatives Mother Wavelet (PDMW) in the frequency domain, making the iterative Bayesian tuning practically feasible.
-
-3. Worming techniques often struggle with noisy signals, yielding fragmented patterns. To explicitly model curvilinearity and preserve global connectivity, BWTO2D applies directional step filtering.
-
-4. Traditional methods often manage voluminous CWT outputs using PCA, which entangles variables into abstract components that lose physical interpretability. Instead, our framework uses a structure-preserving feature selection algorithm that extracts a compact subset of maps.
-
-
 ---
 
 ## Table of Contents
@@ -104,12 +90,25 @@ The accompanying data directories contain results for the two case studies prese
 
 ## Repository Structure
 
+The repository root holds four archives plus the licence and this file:
+
 ```
 BWTO2D/
+├── Matlab Codes.zip                # All source code (App, pipeline, metrics, utilities)
+├── Feature Reduction Comparisons.zip # Ablation study: FS vs PCA vs unreduced stack (Figures 18-19)
+├── Data 1 Synthetic.zip            # Widgiemooltha Dome synthetic benchmark data and results
+├── Data 2 Blake River.zip          # Blake River Group (BRG) case study data and results
+├── LICENSE                         # GNU General Public License v3.0
+└── README.md                       # This file
+```
+
+Unzip all four archives in place before running anything. `Matlab Codes.zip` expands to:
+
+```
+Matlab Codes/
 ├── BWTO2D.mlapp                    # Main GUI application (App Designer)
 ├── Lineaments_Auto7.m              # BTO objective function (4-stage pipeline)
 ├── BHO_SensitivityAnalysis.m       # OAT sensitivity analysis driver (Figure 10)
-├── FeatureReductionComparison.m    # Ablation: FS vs PCA vs unreduced stack (Figures 18-19)
 ├── add_noise_to_xyz.m              # Gaussian noise contamination for robustness tests
 │
 ├── cwt2d.m                         # Core 2D kCWT engine (YAWTB-derived)
@@ -150,21 +149,21 @@ BWTO2D/
 ├── getyawtbprefs.m                 # YAWTB preference reader
 ├── yashow.m / yashow_cwt2d.m / …   # YAWTB visualization utilities
 ├── yapuls.m / yapuls2.m             # YAWTB pulse grid generators
-├── vect.m / sphgrid.m / …          # YAWTB numeric helpers
-│
-├── Data 1 Synthetic.zip            # Widgiemooltha Dome synthetic benchmark data and results
-├── Data 2 Blake River.zip          # Blake River Group (BRG) case study data and results
-├── LICENSE                         # GNU General Public License v3.0
-└── README.md                       # This file
+└── vect.m / sphgrid.m / …          # YAWTB numeric helpers
 ```
+
+`Feature Reduction Comparisons.zip` contains `FeatureReductionComparison.m`, the self-contained
+ablation script that reproduces Figures 18 and 19, together with its saved outputs.
 
 ---
 
 ## Quick Start
 
+Unzip `Matlab Codes.zip` (and the two data archives, if you want to reproduce the case studies), then:
+
 ```matlab
-% 1. Add the repository folder (and subfolders) to MATLAB's path
-addpath(genpath('path/to/BWTO2D'));
+% 1. Add the unzipped code folder (and subfolders) to MATLAB's path
+addpath(genpath('path/to/Matlab Codes'));
 
 % 2. Launch the GUI
 BWTO2D
@@ -496,7 +495,7 @@ All display options are accessible from the **Lineaments** tab dropdown + **Plot
 | File | Description |
 |---|---|
 | `BHO_SensitivityAnalysis.m` | Runs the one-at-a-time sensitivity analysis over exploration ratio, seed points, GP active set size, and acquisition function (231 runs, Figure 10 and Section 2.2.2). |
-| `FeatureReductionComparison.m` | Ablation study of the dimensionality-reduction stage. Compares the proposed feature selection against PCA and the unreduced kCWT stack under identical hyperparameters, and regenerates Figures 18 and 19. Calls the pipeline functions unchanged. |
+| `FeatureReductionComparison.m` | Ablation study of the dimensionality-reduction stage, distributed in `Feature Reduction Comparisons.zip`. Compares the proposed feature selection against PCA and the unreduced kCWT stack under identical hyperparameters, and regenerates Figures 18 and 19. Calls the pipeline functions unchanged. |
 | `add_noise_to_xyz.m` | Adds zero-mean Gaussian noise scaled to a percentage of the data range, used to build the 10% and 25% noise datasets of Section 2.2.3. |
 
 ### Poisson kCWT Engine
