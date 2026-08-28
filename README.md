@@ -57,7 +57,7 @@ We present an unsupervised framework for automated extraction and characterizati
 
 BWTO2D is a MATLAB App Designer application that implements the unsupervised framework described in the paper above. It couples a four-stage image-processing pipeline — **Poisson kernel-based Continuous Wavelet Transform (kCWT)**, **kCWT coefficient selection and fusion**, **directional step filtering with adaptive thresholding**, and **graph-based topological representation** — with MATLAB's Bayesian optimization (`bayesopt`) to automatically tune 10 hyperparameters, maximizing a novel **Graph Representativeness Metric (GRM)**.
 
-When ground-truth curvilinear patterns are available, the tool also tracks the **Fᵦ score**, **fracture intensity ratio (R_P21)**, **Bhattacharyya coefficient (BC)**, and **Jensen–Shannon divergence (JSD)** across iterations, enabling post-hoc evaluation of the unsupervised GRM proxy against supervised metrics.
+When ground-truth curvilinear patterns are available, the tool also tracks the **Fᵦ score**, **fracture intensity ratio (R_P21)**, **Hellinger similarity (HS)**, and **Jensen–Shannon divergence (JSD)** across iterations, enabling post-hoc evaluation of the unsupervised GRM proxy against supervised metrics.
 
 The accompanying data directories contain results for the two case studies presented in the paper: synthetic magnetic data from the **Widgiemooltha Dome** geological model (including noise robustness and sensitivity analyses) and aeromagnetic data from the **Blake River Group (BRG)** in the Abitibi Greenstone Belt, Quebec, Canada.
 
@@ -125,8 +125,8 @@ Matlab Codes/
 ├── nDstrb2D.m                      # 2D statistical distribution normalizer
 │
 ├── calculateFbetaScore.m           # Bidirectional Fᵦ with tolerance buffer
-├── calculateStructuralMetrics.m    # R_P21, orientation, BC, JSD metrics
-├── calculateAngularSimilarity.m    # Angular histogram comparison (optional)
+├── calculateStructuralMetrics.m    # R_P21, orientation, HS, JSD metrics
+├── calculateAngularSimilarity.m    # HS and JSD from orientation histograms
 ├── estimateTolerancePreBTO.m       # Automatic tolerance estimation before BTO
 ├── plotGRMvsGroundTruth.m          # Post-BTO correlation plots
 ├── createRoseDiagrams.m            # Orientation extraction from raster
@@ -305,7 +305,7 @@ Use the **Display** dropdown on the Lineaments tab to view:
 | Deep Lineaments (Auto) | Subset from features with above-average filter width |
 | Shallow Lineaments (Auto) | Subset from features with below-average filter width |
 | Fbeta Score (Auto) | Overlay with Fᵦ, precision, recall, structural metrics |
-| GRM vs Ground Truth | Correlation scatter (GRM vs Fᵦ, R_P21, BC, JSD) |
+| GRM vs Ground Truth | Correlation scatter (GRM vs Fᵦ, R_P21, HS, JSD) |
 | BTO Progress (Auto) | Objective trace, parameter evolution, convergence plots |
 | BTO Best So Far Lineaments (Auto) | Iteration-by-iteration gallery of best curvilinear pattern maps |
 
@@ -464,7 +464,7 @@ All display options are accessible from the **Lineaments** tab dropdown + **Plot
 | **Deep Lineaments (Auto)** | Patterns from features whose step-filter width exceeds the average (deeper structures) |
 | **Shallow Lineaments (Auto)** | Patterns from features with below-average filter width (shallower structures) |
 | **Fbeta Score (Auto)** | Detected vs ground-truth overlay with Fᵦ, precision, recall, TP, FP, FN, and structural metrics |
-| **GRM vs Ground Truth** | Four scatter panels: GRM vs Fᵦ, R_P21, BC, JSD, with Pearson correlation coefficients (*r*) |
+| **GRM vs Ground Truth** | Four scatter panels: GRM vs Fᵦ, R_P21, HS, JSD, with Pearson correlation coefficients (*r*) |
 | **BTO Progress (Auto)** | Objective trace, minimum trace, per-variable evolution, and convergence diagnostics |
 | **BTO Best So Far Lineaments (Auto)** | Iteration gallery showing the best curvilinear pattern map at each improvement step |
 
@@ -525,7 +525,7 @@ All display options are accessible from the **Lineaments** tab dropdown + **Plot
 | File | Description |
 |---|---|
 | `calculateFbetaScore.m` | Computes Fᵦ score with configurable tolerance buffer, bidirectional matching, and length weighting. |
-| `calculateStructuralMetrics.m` | Computes the fracture intensity ratio R_P21, orientation distributions, Bhattacharyya coefficient (BC), and Jensen–Shannon divergence (JSD). R_P21 is the fraction of ground-truth skeleton length falling within a 70-pixel dilation of the detected skeleton (Eq. 23), a recall-type measure, not the ratio of the two P₂₁ intensities. |
+| `calculateStructuralMetrics.m` | Computes the fracture intensity ratio R_P21, orientation distributions, Hellinger similarity (HS), and Jensen–Shannon divergence (JSD). R_P21 is the fraction of ground-truth skeleton length falling within a 70-pixel dilation of the detected skeleton (Eq. 23), a recall-type measure, not the ratio of the two P₂₁ intensities. |
 | `calculateAngularSimilarity.m` | Angular histogram comparison between detected and target orientations (optional). |
 | `estimateTolerancePreBTO.m` | Runs a quick pilot detection to auto-estimate a tolerance that yields Fᵦ ∈ [0.4, 0.6]. |
 | `plotGRMvsGroundTruth.m` | Generates correlation scatter plots (GRM vs each ground-truth metric). |
